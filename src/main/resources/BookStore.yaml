@@ -1,0 +1,305 @@
+openapi: "3.0.3"
+info:
+  title: Book Store
+  version: '1.0.0'
+
+servers:
+  - url: http://localhost:8080/v1
+    description: Dev server
+
+paths:
+  /books:
+    get:
+      summary: Получение списка книг
+      operationId: getAllBooks
+      tags:
+        - books
+      responses:
+        '200':
+          description: Успешное получение всех книг
+          content:
+            application/json:
+              schema:
+                type: array
+                uniqueItems: true
+                items:
+                  $ref: '#/components/schemas/BookFullViewDTO'
+        default:
+          $ref: '#/components/responses/ResponseWithBasicError'
+
+    post:
+      summary: Создание новой книги
+      operationId: createBook
+      tags:
+        - books
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookFullViewDTO'
+      responses:
+        '201':
+          description: Успешное создание книги
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookFullViewDTO'
+        default:
+          $ref: '#/components/responses/ResponseWithBasicError'
+
+
+  /books/{id}:
+    get:
+      summary: Получение книги по id
+      operationId: getBookById
+      tags:
+        - books
+      parameters:
+        - $ref: '#/components/parameters/id'
+
+      responses:
+        '200':
+          description: Успешное получение книги по id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookFullViewDTO'
+        default:
+          $ref: '#/components/responses/ResponseWithBasicError'
+
+    put:
+      summary: Полное обновление книги по id
+      operationId: fullUpdateBookById
+      tags:
+        - books
+      parameters:
+        - $ref: '#/components/parameters/id'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookFullViewDTO'
+      responses:
+        '200':
+          description: Успешное полное обновление книги по id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookFullViewDTO'
+        default:
+          $ref: '#/components/responses/ResponseWithBasicError'
+
+    patch:
+      summary: Частичное обновление книги по id
+      operationId: partialUpdateBookById
+      tags:
+        - books
+      parameters:
+        - $ref: '#/components/parameters/id'
+
+
+      #################################################
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookPatchRequestDTO'
+      #################################################
+
+
+      responses:
+        '200':
+          description: Успешное частичное обновление книги по id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookFullViewDTO'
+        default:
+          $ref: '#/components/responses/ResponseWithBasicError'
+
+
+
+    delete:
+      summary: Удаление книги по id
+      operationId: deleteBookById
+      tags:
+        - books
+      parameters:
+        - $ref: '#/components/parameters/id'
+
+      responses:
+        '200':
+          description: Успешное удаление книги по id
+          content:
+            application/json:
+              schema: {}
+        default:
+          $ref: '#/components/responses/ResponseWithBasicError'
+
+
+
+
+
+
+
+
+components:
+  schemas:
+    BookFullViewDTO:
+      type: object
+      required:
+        - title
+        - publication_year
+        - total_pages
+        - authors
+        - genres
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Уникальный идентификатор
+        title:
+          type: string
+          minLength: 1
+          maxLength: 512
+          example: Преступление и наказание
+          description: Наименование книги
+        publication_year:
+          type: integer
+          minimum: 0
+          maximum: 2023
+          example: 1989
+          description: Год публикации
+        total_pages:
+          type: integer
+          minimum: 1
+          maximum: 10000
+          example: 514
+          description: Количество страниц
+        authors:
+          type: array
+          uniqueItems: true
+          items:
+            $ref: '#/components/schemas/Author'
+          description: Авторы
+        genres:
+          type: array
+          uniqueItems: true
+          items:
+            $ref: '#/components/schemas/Genres'
+          description: Жанры
+
+    BookPatchRequestDTO:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 512
+          example: Преступление и наказание
+          description: Наименование книги
+        publication_year:
+          type: integer
+          minimum: 0
+          maximum: 2023
+          example: 1989
+          description: Год публикации
+        total_pages:
+          type: integer
+          minimum: 1
+          maximum: 10000
+          example: 514
+          description: Количество страниц
+        authors:
+          type: array
+          uniqueItems: true
+          items:
+            $ref: '#/components/schemas/Author'
+          description: Авторы
+        genres:
+          type: array
+          uniqueItems: true
+          items:
+            $ref: '#/components/schemas/Genres'
+          description: Жанры
+
+
+
+    Author:
+      type: object
+      required:
+        - first_name
+        - last_name
+        - date_of_birth
+      properties:
+        id:
+          type: string
+          format: uuid
+          nullable: false
+          description: Уникальный идентификатор
+        first_name:
+          type: string
+          minLength: 1
+          maxLength: 32
+          example: Федор
+          description: Имя автора
+        last_name:
+          type: string
+          minLength: 1
+          maxLength: 32
+          example: Достоевский
+          description: Фамилия автора
+        date_of_birth:
+          type: string
+          format: date
+          description: Дата рождения автора
+
+    Genres:
+      type: object
+      required:
+        - name
+      properties:
+        id:
+          type: string
+          format: uuid
+          nullable: false
+          description: Уникальный идентификатор
+        name:
+          type: string
+          nullable: false
+          example: Роман
+
+    BasicError:
+      type: object
+      required:
+        - error_code
+        - message
+      properties:
+        error_code:
+          type: integer
+          example: 404
+        message:
+          type: string
+          example: Bad Request
+
+
+  parameters:
+    id:
+      in: path
+      name: id
+      required: true
+      description: Уникальный идентификатор (UUID)
+      schema:
+        type: string
+        format: uuid
+
+  responses:
+    ResponseWithBasicError:
+      description: Ошибка
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BasicError'
