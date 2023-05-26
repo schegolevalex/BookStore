@@ -6,10 +6,10 @@ drop table if exists genres cascade;
 
 create table books
 (
-    id          uuid not null,
-    title       varchar(255),
-    total_pages integer,
-    year        date,
+    id              uuid not null,
+    title           varchar(255),
+    total_pages     integer,
+    publication_year integer,
     primary key (id)
 );
 
@@ -46,9 +46,14 @@ alter table if exists books_authors add constraint FK1b933slgixbjdslgwu888m34v f
 alter table if exists books_genres add constraint FKlv42b6uemg63q27om39jjbt9o foreign key (book_id) references books;
 alter table if exists books_genres add constraint FKgkat05y2cec3tcpl6ur250sd0 foreign key (genre_id) references genres;
 
-insert into books values ('123e4567-e89b-12d3-a456-426655440000', 'Преступление и наказание', 777, '2014-12-11');
-insert into authors values ('123e4567-e89b-12d3-a456-426655440011', '1860-10-02', 'Федор', 'Достоевский');
-insert into genres values ('123e4567-e89b-12d3-a456-426655440022', 'Роман');
-insert into books_authors values ('123e4567-e89b-12d3-a456-426655440000', '123e4567-e89b-12d3-a456-426655440011');
-insert into books_genres values ('123e4567-e89b-12d3-a456-426655440022', '123e4567-e89b-12d3-a456-426655440000');
+insert into books
+values ('123e4567-e89b-12d3-a456-426655440000', 'Преступление и наказание', 777, 2001);
+insert into authors
+values ('123e4567-e89b-12d3-a456-426655440011', '1860-10-02', 'Федор', 'Достоевский');
+insert into genres
+values ('123e4567-e89b-12d3-a456-426655440022', 'Роман');
+insert into books_authors
+values ('123e4567-e89b-12d3-a456-426655440000', '123e4567-e89b-12d3-a456-426655440011');
+insert into books_genres
+values ('123e4567-e89b-12d3-a456-426655440022', '123e4567-e89b-12d3-a456-426655440000');
 

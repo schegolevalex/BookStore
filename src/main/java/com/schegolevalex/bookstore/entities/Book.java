@@ -16,6 +16,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @ToString(exclude = {"authors", "genres"})
+@EqualsAndHashCode(of = "id")
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -23,16 +24,16 @@ public class Book {
     UUID id;
     @Column(name = "title")
     String title;
-    @Column(name = "year")
-    LocalDate year;
+    @Column(name = "publication_year")
+    Integer publicationYear;
     @Column(name = "total_pages")
     int totalPages;
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "books_authors"
             , joinColumns = @JoinColumn(name = "book_id")
             , inverseJoinColumns = @JoinColumn(name = "author_id"))
     List<Author> authors;
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "books_genres"
             , joinColumns = @JoinColumn(name = "book_id")
             , inverseJoinColumns = @JoinColumn(name = "genre_id"))
@@ -49,14 +50,4 @@ public class Book {
             genres = new ArrayList<>();
         genres.add(genre);
     }
-
-//    @Override
-//    public String toString() {
-//        return "Book{" +
-//                "id=" + id +
-//                ", title='" + title + '\'' +
-//                ", year=" + year +
-//                ", totalPages=" + totalPages +
-//                '}';
-//    }
 }

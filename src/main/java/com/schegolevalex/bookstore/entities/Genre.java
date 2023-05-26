@@ -14,6 +14,8 @@ import java.util.UUID;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Getter
 @Setter
+@ToString(exclude = "books")
+@EqualsAndHashCode(of = "id")
 public class Genre {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

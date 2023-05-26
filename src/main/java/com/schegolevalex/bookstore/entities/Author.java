@@ -1,10 +1,7 @@
 package com.schegolevalex.bookstore.entities;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
@@ -18,6 +15,8 @@ import java.util.UUID;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Getter
 @Setter
+@ToString
+@EqualsAndHashCode(of = "id")
 public class Author {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
